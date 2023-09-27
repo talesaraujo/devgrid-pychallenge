@@ -11,6 +11,14 @@ OPEN_WEATHER_API_KEY = os.environ.get('OPENWEATHER_API_KEY')
 API_URL = "https://api.openweathermap.org/data/2.5"
 
 
+
+# Retrieve locations list
+with open('locations_list.txt', 'r') as loc_list:
+    locations_list = loc_list.readlines()
+
+locations_list = [ int(line[:-1]) for line in locations_list ]
+
+
 def get_weather_by_geolocation(latitude: float, longitude: float) -> dict:
     """TODO"""
     try:
@@ -36,5 +44,8 @@ def get_weather_by_city_id(city_id: int) -> dict:
 
 if __name__ == '__main__':
 
-    pprint(get_weather_by_city_id(3443013))
+    # pprint(get_weather_by_city_id(3443013))
+
+    for location in locations_list:
+        print(location)
 
