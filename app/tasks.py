@@ -21,7 +21,7 @@ app = Celery(__name__, broker=REDIS_URL, backend=REDIS_URL)
 
 def get_user_data(user_id: int) -> None:
     """TODO"""
-    user_object = None
+    user_data = None
 
     os.makedirs(DATA_PATH, exist_ok=True)
 
@@ -34,9 +34,9 @@ def get_user_data(user_id: int) -> None:
         content = file.read()
 
         if content:
-            user_object = json.loads(content)
+            user_data = json.loads(content)
     
-    return user_object
+    return user_data
 
 
 
@@ -57,10 +57,10 @@ def capture_weather_info(user_id: int, datetime: str) -> None:
     
     """
     # 1st STEP: Get user object
-    user_object = get_user_data(user_id)
+    user_data = get_user_data(user_id)
     
-    if not user_object:
-        user_object = {
+    if not user_data:
+        user_data = {
             'user_id': user_id,
             'request_datetime': datetime,
             'cities': []
@@ -75,17 +75,17 @@ def capture_weather_info(user_id: int, datetime: str) -> None:
 
             data = response.json()
 
-            user_object['cities'].append({
+            user_data['cities'].append({
                 'city_id': location_id,
                 'temp': data.get('main').get('temp'),
                 'humidity': data.get('main').get('humidity')
             })
 
             # 3rd STEP: Save user object
-            filename = f"{DATA_PATH}/{user_object['user_id']}.json"
+            filename = f"{DATA_PATH}/{user_data['user_id']}.json"
 
             with open(filename, 'w') as file:
-                json.dump(user_object, file, indent=2)
+                json.dump(user_data, file, indent=2)
         
         except Exception as excp:
             print(f"Error when fetching data for location {location_id}:{excp}")
