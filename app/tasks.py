@@ -18,6 +18,28 @@ OPEN_WEATHER_API_KEY = os.environ.get('OPEN_WEATHER_API_KEY')
 
 app = Celery(__name__, broker=REDIS_URL, backend=REDIS_URL)
 
+
+def get_user_data(user_id: int) -> None:
+    """TODO"""
+    user_object = None
+
+    os.makedirs(DATA_PATH, exist_ok=True)
+
+    filename = f'{DATA_PATH}/{user_id}.json'
+
+    if not os.path.exists(filename):
+        open(filename, 'w').close()
+
+    with open(filename, 'r') as file:
+        content = file.read()
+
+        if content:
+            user_object = json.loads(content)
+    
+    return user_object
+
+
+
 @app.task
 def capture_weather_info(user_id: int, datetime: str) -> None:
     """Retrieves weather data from OpenWeather API.
@@ -35,20 +57,7 @@ def capture_weather_info(user_id: int, datetime: str) -> None:
     
     """
     # 1st STEP: Get user object
-    user_object = None
-
-    os.makedirs(DATA_PATH, exist_ok=True)
-
-    filename = f'{DATA_PATH}/{user_id}.json'
-
-    if not os.path.exists(filename):
-        open(filename, 'w').close()
-
-    with open(filename, 'r') as file:
-        content = file.read()
-
-        if content:
-            user_object = json.loads(content)
+    user_object = get_user_data(user_id)
     
     if not user_object:
         user_object = {
