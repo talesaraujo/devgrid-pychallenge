@@ -10,7 +10,21 @@ packages = [{include = "devgrid_pychallenge"}]
 python = "^3.11"
 requests = "^2.31.0"
 python-dotenv = "^1.0.0"
+fastapi = "^0.103.2"
+httpx = "^0.25.0"
+celery = "^5.3.4"
+redis = "^5.0.1"
+uvicorn = "^0.23.2"
 
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.16.1"
+ipdb = "^0.13.13"
+python-dotenv = "^1.0.0"
+pytest = "^7.4.2"
+pytest-cov = "^4.1.0"
+coverage = "^7.3.2"
+pytest-html = "^4.0.2"
 
 [build-system]
 requires = ["poetry-core"]
