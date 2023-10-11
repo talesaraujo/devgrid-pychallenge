@@ -55,9 +55,10 @@ def show_weather_capture_progress(user_id: int) -> dict:
     user_data = get_user_data(user_id)
 
     if not user_data:
-        return {
-            'info': 'No such user with data to be monitored.'
-        }
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='No such user with data to be monitored.'
+        )
 
     progress = (len(user_data['cities']) / len(LOCATION_IDS)) * 100
     

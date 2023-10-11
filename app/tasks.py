@@ -53,7 +53,7 @@ def get_user_data(user_id: int) -> dict:
 
 
 
-@app.task
+@app.task(rate_limit='60/m')
 def capture_weather_info(user_id: int, datetime: str) -> None:
     """Retrieves weather data from OpenWeather API.
 
