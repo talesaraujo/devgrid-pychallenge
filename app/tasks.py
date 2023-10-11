@@ -1,4 +1,9 @@
-"""TODO Module docstring"""
+"""TASK QUEUE
+
+This module encapsulates the logic used for the task queue process involved
+on fetching the weather data from OpenWeather API.
+
+"""
 from dotenv import load_dotenv; load_dotenv() #TODO: Remove this asap
 import os
 import json
@@ -19,8 +24,19 @@ OPEN_WEATHER_API_KEY = os.environ.get('OPEN_WEATHER_API_KEY')
 app = Celery(__name__, broker=REDIS_URL, backend=REDIS_URL)
 
 
-def get_user_data(user_id: int) -> None:
-    """TODO"""
+def get_user_data(user_id: int) -> dict:
+    """Tries to recover user information if it already exists.
+    
+    Arguments
+    ---------
+    user_id: int
+        An user identifier number.
+
+    Returns
+    -------
+    dict: The data regarding that specific user.
+    
+    """
     user_data = None
 
     os.makedirs(DATA_PATH, exist_ok=True)
@@ -56,7 +72,7 @@ def capture_weather_info(user_id: int, datetime: str) -> None:
     None
     
     """
-    # 1st STEP: Get user object
+    # 1st STEP: Get user data
     user_data = get_user_data(user_id)
     
     if not user_data:
