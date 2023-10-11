@@ -4,24 +4,21 @@ This module encapsulates the logic used for the task queue process involved
 on fetching the weather data from OpenWeather API.
 
 """
-from dotenv import load_dotenv; load_dotenv() #TODO: Remove this asap
 import os
 import json
 import requests
 
 from celery import Celery
 
-from app.constants import LOCATION_IDS
+from app import constants
 
 
-REDIS_URL = os.environ.get('REDIS_URL', 'redis://redis:6379')
-DATA_PATH = os.environ.get('DATA_PATH', 'data')
-
-OPEN_WEATHER_API_URL = os.environ.get('OPEN_WEATHER_API_URL')
-OPEN_WEATHER_API_KEY = os.environ.get('OPEN_WEATHER_API_KEY')
-
-
-app = Celery(__name__, broker=REDIS_URL, backend=REDIS_URL)
+app = Celery(
+    __name__,
+    broker=constants.REDIS_URL,
+    backend=constants.REDIS_URL,
+    broker_connection_retry_on_startup=True
+)
 
 
 def get_user_data(user_id: int) -> dict:
@@ -39,9 +36,9 @@ def get_user_data(user_id: int) -> dict:
     """
     user_data = None
 
-    os.makedirs(DATA_PATH, exist_ok=True)
+    os.makedirs(constants.DATA_PATH, exist_ok=True)
 
-    filename = f'{DATA_PATH}/{user_id}.json'
+    filename = f'{constants.DATA_PATH}/{user_id}.json'
 
     if not os.path.exists(filename):
         open(filename, 'w').close()
@@ -82,10 +79,10 @@ def capture_weather_info(user_id: int, datetime: str) -> None:
             'cities': []
         }
     
-    for location_id in LOCATION_IDS:
+    for location_id in constants.LOCATION_IDS:
         try:
             # 2nd STEP: Get weather info
-            api_url = f"{OPEN_WEATHER_API_URL}/weather?id={location_id}&appid={OPEN_WEATHER_API_KEY}&units=metric"
+            api_url = f"{constants.OPEN_WEATHER_API_URL}/weather?id={location_id}&appid={constants.OPEN_WEATHER_API_KEY}&units=metric"
             response = requests.get(api_url)
             response.raise_for_status()
 
@@ -98,7 +95,7 @@ def capture_weather_info(user_id: int, datetime: str) -> None:
             })
 
             # 3rd STEP: Save user object
-            filename = f"{DATA_PATH}/{user_data['user_id']}.json"
+            filename = f"{constants.DATA_PATH}/{user_data['user_id']}.json"
 
             with open(filename, 'w') as file:
                 json.dump(user_data, file, indent=2)

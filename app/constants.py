@@ -1,9 +1,18 @@
-"""LOCATION IDS
+from dotenv import load_dotenv; load_dotenv() #TODO: Remove this asap
+"""CONSTANT DEFINITIONS
 
-Each one of these represent a specific location. They are provided in
-Appendix A on the DevGrid test.
+Definition of shared constants and env variables used by the application.
 
 """
+import os
+
+OPEN_WEATHER_API_URL = "https://api.openweathermap.org/data/2.5"
+
+OPEN_WEATHER_API_KEY = os.environ.get('OPEN_WEATHER_API_KEY')
+
+REDIS_URL = os.environ.get('REDIS_URL', 'redis://redis:6379')
+
+DATA_PATH = os.environ.get('DATA_PATH', 'data')
 
 LOCATION_IDS = [
     3439525, 3439781, 3440645, 3442098, 3442778, 3443341, 3442233, 3440781,
