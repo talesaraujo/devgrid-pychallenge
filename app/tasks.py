@@ -1,5 +1,5 @@
-#TODO: Remove this asap
-from dotenv import load_dotenv; load_dotenv()
+"""TODO Module docstring"""
+from dotenv import load_dotenv; load_dotenv() #TODO: Remove this asap
 import os
 import json
 import requests
@@ -10,7 +10,7 @@ from app.constants import LOCATION_IDS
 
 
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://redis:6379')
-DATA_PATH = os.environ.get('DATA_PATH', '/tmp')
+DATA_PATH = os.environ.get('DATA_PATH', 'data')
 
 OPEN_WEATHER_API_URL = os.environ.get('OPEN_WEATHER_API_URL')
 OPEN_WEATHER_API_KEY = os.environ.get('OPEN_WEATHER_API_KEY')
@@ -20,7 +20,18 @@ app = Celery(__name__, broker=REDIS_URL, backend=REDIS_URL)
 
 @app.task
 def capture_weather_info(user_id: int, datetime: str) -> None:
-    """TODO
+    """Retrieves weather data from OpenWeather API.
+
+    Arguments
+    ---------
+    user_id: int
+        An user identifier number.
+    datetime: str
+        The datetime that represents the current time of processing.
+
+    Returns
+    -------
+    None
     
     """
     # 1st STEP: Get user object
@@ -47,7 +58,6 @@ def capture_weather_info(user_id: int, datetime: str) -> None:
         }
     
     for location_id in LOCATION_IDS:
-
         try:
             # 2nd STEP: Get weather info
             api_url = f"{OPEN_WEATHER_API_URL}/weather?id={location_id}&appid={OPEN_WEATHER_API_KEY}&units=metric"
