@@ -34,10 +34,16 @@ def test_show_weather_capture_progress(client):
     # Mock file
     with open(os.path.join('data', '6969.json'), 'w') as json_file:
         json.dump(user_data, json_file, indent=2)
-    
+
     response = client.get("/weather/6969")
     assert response.status_code == 200
     assert response.json() == {"progress": "1.2%"} # 2 out of 167 locations
 
     # Remove temp mock file
     os.remove(os.path.join('data', '6969.json'))
+
+
+def test_post_no_provided_user_id_must_return_empty_response(client):
+    response = client.post("/weather", json={'user_id': ''})
+
+    assert response.status_code == 422
