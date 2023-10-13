@@ -5,6 +5,7 @@ weather data fetching.
 
 """
 from fastapi import FastAPI, HTTPException, status
+from starlette.responses import RedirectResponse
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -65,3 +66,10 @@ def show_weather_capture_progress(user_id: int) -> dict:
     return {
         'progress': f"{round(progress, 2)}%"
     }
+
+
+@app.get("/", tags=['index'], include_in_schema=False)
+def index():
+    """API Index."""
+    response = RedirectResponse(url="/docs")
+    return response

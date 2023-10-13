@@ -99,10 +99,11 @@ def capture_weather_info(user_id: int, datetime: str) -> None:
 
             # 3rd STEP: Save user object
             filename = f"{constants.DATA_PATH}/{user_data['user_id']}.json"
-            logger.info(f"Location id {location_id} weather info saved for user_id {user_id}.")
 
             with open(filename, 'w') as file:
                 json.dump(user_data, file, indent=2)
+            
+            logger.info(f"Location id {location_id} weather info saved for user_id {user_id}.")
         
         except Exception as excp:
             print(f"Error when fetching data for location {location_id}:{excp}")
