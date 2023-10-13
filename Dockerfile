@@ -2,10 +2,10 @@
 FROM python:3.11
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /src
 
 # Create the 'data' directory if it doesn't exist
-RUN mkdir -p /app/data
+RUN mkdir -p /src/data && chown -R root:root /src/data
 
 # # Set permissions for the 'data' directory
 # RUN chmod 777 /app/data
@@ -15,7 +15,7 @@ RUN mkdir -p /app/data
 # RUN if [ -d "data" ]; then cp -r data /app/; fi
 
 # Copy the project files and install dependencies
-COPY . /app/
+COPY . /src/
 
 RUN pip install --no-cache-dir -U pip && pip install --no-cache-dir poetry && poetry install --no-root
 
