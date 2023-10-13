@@ -16,18 +16,24 @@ To tackle this problem, this application implements the basic concept of *task q
 
 ## How to run it
 
-Once you have cloned the repository and have requirement set up, you can run
+Once you have cloned the repository and have all requirements installed set up, you can run
 
 `poetry install`
 
-to install the application dependencies. Then, run
+to install the application dependencies. Make sure you have every environment variable at `.env` set up. Also make sure you have Redis correctly set up and that its instance is listening to connections at port `6379`.
 
-`poetry run `
+Then, to get celery up and running, run the following:
+
+`poetry run celery -A app.tasks worker --loglevel=INFO`
+
+Finally, in another terminal instance, to run the FastAPI web application you can execute the following command to get the service running:
+
+`poetry run uvicorn app.service:app --host 0.0.0.0 --port 8000 --reload`
 
 
 ## Endpoints
 
-FastAPI automatically provides a OpenAPI interface that you can easily verify the functionality of the application. Head over to `http://localhost:3333/docs` in order to try it.
+FastAPI automatically provides a OpenAPI interface that you can easily verify the functionality of the application. There's an automatic redirect set up, so head over to `http://localhost:8000` in order to try it out.
 
 ### `POST /weather`
 Request payload
@@ -39,10 +45,31 @@ Request payload
 
 ### `GET /weather/{user_id}`
 
+Response example
+```
+{
+    'progress': '100%'
+}
+```
+
 ## Tests
 
-### Test Coverage 
-Current Status: 71%
+You can run automated tests and generate coverage reports by running
+
+`poetry run pytest -vv --cov=app --cov-report=html:tests/htmlcov tests`
+
+The coverage report can be found at `tests/htmlcov/index.html`.
+
+### Test Coverage Current Status
+
+![](img/test_coverage.jpeg)
 
 ## Docker
-- In progress...
+
+- [✅] Dockerfile
+- [✅] Redis Stage
+- [✅] Celery Stage
+- [✅] FastAPI Stage
+- [❌] Solve I/O Volume Issue
+- [❌] Integrate testing pipeline to Docker Compose
+- [❌] Full Containerized Application

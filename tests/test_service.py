@@ -47,3 +47,15 @@ def test_post_no_provided_user_id_must_return_empty_response(client):
     response = client.post("/weather", json={'user_id': ''})
 
     assert response.status_code == 422
+
+
+def test_post_no_existent_user_id_must_return_not_found_error(client):
+    response = client.get("/weather/6969")
+
+    assert response.status_code == 404
+
+
+def test_redirect_must_return_200(client):
+    response = client.get("/")
+
+    assert response.status_code == 200
