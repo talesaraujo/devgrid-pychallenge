@@ -20,7 +20,7 @@ Once you have cloned the repository and have requirement set up, you can run
 
 `poetry install`
 
-to install the application dependencies. Make sure you have every environment variable at `.env` set up.
+to install the application dependencies. Make sure you have every environment variable at `.env` set up. Also make sure you have Redis correctly set up and that its instance is listening to connections at port `6379`.
 
 Then, to get celery up and running, run the following:
 
@@ -47,9 +47,22 @@ Request payload
 
 ## Tests
 
+You can run automated tests and generate coverage reports by running
+
+`poetry run pytest -vv --cov=app --cov-report=html:tests/htmlcov tests`
+
+The coverage report can be found at `tests/htmlcov/index.html`.
+
 ### Test Coverage Current Status
 
 ![](img/test_coverage.jpeg)
 
 ## Docker
-- In progress...
+
+- [✅] Dockerfile
+- [✅] Redis Stage
+- [✅] Celery Stage
+- [✅] FastAPI Stage
+- [❌] Solve I/O Volume Issue
+- [❌] Integrate testing pipeline to Docker Compose
+- [❌] Full Containerized Application
