@@ -45,6 +45,13 @@ Request payload
 
 ### `GET /weather/{user_id}`
 
+Response example
+```
+{
+    'progress': '100%'
+}
+```
+
 ## Tests
 
 You can run automated tests and generate coverage reports by running
