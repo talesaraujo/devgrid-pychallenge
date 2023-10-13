@@ -7,11 +7,13 @@ on fetching the weather data from OpenWeather API.
 import os
 import json
 import requests
+import logging
 
 from celery import Celery
 
 from app import constants
 
+logger = logging.getLogger(__name__)
 
 app = Celery(
     __name__,
@@ -52,7 +54,6 @@ def get_user_data(user_id: int) -> dict:
     return user_data
 
 
-
 @app.task(rate_limit='60/m')
 def capture_weather_info(user_id: int, datetime: str) -> None:
     """Retrieves weather data from OpenWeather API.
@@ -70,6 +71,7 @@ def capture_weather_info(user_id: int, datetime: str) -> None:
     
     """
     # 1st STEP: Get user data
+    logger.info(f"Starting to fetch data for user id {user_id}...")
     user_data = get_user_data(user_id)
     
     if not user_data:
@@ -82,6 +84,7 @@ def capture_weather_info(user_id: int, datetime: str) -> None:
     for location_id in constants.LOCATION_IDS:
         try:
             # 2nd STEP: Get weather info
+            logger.info(f"Performing request to OpenWeather API...")
             api_url = f"{constants.OPEN_WEATHER_API_URL}/weather?id={location_id}&appid={constants.OPEN_WEATHER_API_KEY}&units=metric"
             response = requests.get(api_url)
             response.raise_for_status()
@@ -96,6 +99,7 @@ def capture_weather_info(user_id: int, datetime: str) -> None:
 
             # 3rd STEP: Save user object
             filename = f"{constants.DATA_PATH}/{user_data['user_id']}.json"
+            logger.info(f"Location id {location_id} weather info saved for user_id {user_id}.")
 
             with open(filename, 'w') as file:
                 json.dump(user_data, file, indent=2)
