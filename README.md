@@ -16,7 +16,7 @@ To tackle this problem, this application implements the basic concept of *task q
 
 ## How to run it
 
-Once you have cloned the repository and have requirement set up, you can run
+Once you have cloned the repository and have all requirements installed set up, you can run
 
 `poetry install`
 
